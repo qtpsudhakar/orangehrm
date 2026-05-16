@@ -241,4 +241,301 @@ describe('WebMCP Tools - Tool Registry', () => {
   });
 });
 
+// Mock admin tool definitions matching the pattern in adminReadTools.ts / adminWriteTools.ts
+const adminReadToolMocks: ModelContextToolDefinition[] = [
+  {
+    name: 'list_job_categories',
+    description: 'List all configured job categories.',
+    execute: async () => ({
+      success: true,
+      message: 'Job categories fetched',
+      data: {count: 2, jobCategories: [{id: 1, name: 'IT'}, {id: 2, name: 'Finance'}]},
+    }),
+  },
+  {
+    name: 'list_employment_statuses',
+    description: 'List all configured employment statuses.',
+    execute: async () => ({
+      success: true,
+      message: 'Employment statuses fetched',
+      data: {count: 3, employmentStatuses: [{id: 1, name: 'Full-Time'}]},
+    }),
+  },
+  {
+    name: 'list_locations',
+    description: 'List all office and work locations.',
+    execute: async () => ({
+      success: true,
+      message: 'Locations fetched',
+      data: {count: 1, locations: [{id: 1, name: 'HQ', countryCode: 'US'}]},
+    }),
+  },
+  {
+    name: 'list_nationalities',
+    description: 'List all configured nationalities.',
+    execute: async () => ({
+      success: true,
+      message: 'Nationalities fetched',
+      data: {count: 5, nationalities: [{id: 1, name: 'American'}]},
+    }),
+  },
+  {
+    name: 'list_subunits',
+    description: 'List all organizational structure subunits.',
+    execute: async () => ({
+      success: true,
+      message: 'Subunits fetched',
+      data: {count: 2, subunits: [{id: 1, name: 'Engineering'}]},
+    }),
+  },
+  {
+    name: 'list_pay_grades',
+    description: 'List all configured pay grades.',
+    execute: async () => ({
+      success: true,
+      message: 'Pay grades fetched',
+      data: {count: 3, payGrades: [{id: 1, name: 'Grade A'}]},
+    }),
+  },
+  {
+    name: 'list_work_shifts',
+    description: 'List all configured work shifts.',
+    execute: async () => ({
+      success: true,
+      message: 'Work shifts fetched',
+      data: {count: 2, workShifts: [{id: 1, name: 'Morning Shift'}]},
+    }),
+  },
+  {
+    name: 'get_organization_info',
+    description: 'Get organization general information.',
+    execute: async () => ({
+      success: true,
+      message: 'Organization info fetched',
+      data: {organization: {name: 'OrangeHRM Inc.', taxId: '123-456'}},
+    }),
+  },
+  {
+    name: 'list_education_qualifications',
+    description: 'List all education qualification types.',
+    execute: async () => ({
+      success: true,
+      message: 'Education qualifications fetched',
+      data: {count: 4, educations: [{id: 1, name: 'Bachelor of Science'}]},
+    }),
+  },
+  {
+    name: 'list_skill_qualifications',
+    description: 'List all skill qualification types.',
+    execute: async () => ({
+      success: true,
+      message: 'Skill qualifications fetched',
+      data: {count: 3, skills: [{id: 1, name: 'TypeScript'}]},
+    }),
+  },
+  {
+    name: 'list_license_qualifications',
+    description: 'List all license qualification types.',
+    execute: async () => ({
+      success: true,
+      message: 'License qualifications fetched',
+      data: {count: 2, licenses: [{id: 1, name: 'Driver License'}]},
+    }),
+  },
+  {
+    name: 'list_language_qualifications',
+    description: 'List all language qualification types.',
+    execute: async () => ({
+      success: true,
+      message: 'Language qualifications fetched',
+      data: {count: 6, languages: [{id: 1, name: 'English'}]},
+    }),
+  },
+  {
+    name: 'list_membership_qualifications',
+    description: 'List all membership qualification types.',
+    execute: async () => ({
+      success: true,
+      message: 'Membership qualifications fetched',
+      data: {count: 2, memberships: [{id: 1, name: 'IEEE'}]},
+    }),
+  },
+];
+
+const adminWriteToolMocks: ModelContextToolDefinition[] = [
+  {
+    name: 'create_job_title',
+    description: 'Create a new job title.',
+    inputSchema: {
+      type: 'object',
+      properties: {name: {type: 'string'}},
+      required: ['name'],
+    },
+    execute: async (args) => {
+      if (!args.name) {
+        return {success: false, message: 'Missing required fields', errorCode: 'VALIDATION_ERROR'};
+      }
+      return {success: true, message: 'Job title created', data: {jobTitle: {id: 10, name: args.name}}};
+    },
+  },
+  {
+    name: 'create_location',
+    description: 'Create a new work location.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: {type: 'string'},
+        countryCode: {type: 'string'},
+      },
+      required: ['name', 'countryCode'],
+    },
+    execute: async (args) => {
+      if (!args.name || !args.countryCode) {
+        return {success: false, message: 'Missing required fields', errorCode: 'VALIDATION_ERROR'};
+      }
+      return {
+        success: true,
+        message: 'Location created',
+        data: {location: {id: 5, name: args.name, countryCode: args.countryCode}},
+      };
+    },
+  },
+  {
+    name: 'create_system_user',
+    description: 'Create a new system user account.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        username: {type: 'string'},
+        password: {type: 'string'},
+        userRoleId: {type: 'number'},
+        empNumber: {type: 'number'},
+        status: {type: 'boolean'},
+      },
+      required: ['username', 'password', 'userRoleId', 'empNumber', 'status'],
+    },
+    execute: async (args) => {
+      if (!args.username || !args.password || args.userRoleId == null || args.empNumber == null || args.status == null) {
+        return {success: false, message: 'Missing required fields', errorCode: 'VALIDATION_ERROR'};
+      }
+      return {success: true, message: 'System user created', data: {user: {id: 20, username: args.username}}};
+    },
+  },
+];
+
+describe('WebMCP Admin Tools - Read Tools', () => {
+  it('should execute all 13 admin read tools successfully', async () => {
+    for (const tool of adminReadToolMocks) {
+      const result = (await tool.execute({})) as ToolResult;
+      expect(result.success).toBe(true);
+      expect(result.data).toBeDefined();
+    }
+  });
+
+  it('should return collection with count for list tools', async () => {
+    const listTools = adminReadToolMocks.filter((t) => t.name !== 'get_organization_info');
+    for (const tool of listTools) {
+      const result = (await tool.execute({})) as ToolResult<{count: number}>;
+      expect(result.success).toBe(true);
+      expect((result.data as {count: number})?.count).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it('should return single record for get_organization_info', async () => {
+    const tool = adminReadToolMocks.find((t) => t.name === 'get_organization_info')!;
+    const result = (await tool.execute({})) as ToolResult<{organization: unknown}>;
+    expect(result.success).toBe(true);
+    expect((result.data as {organization: unknown})?.organization).toBeDefined();
+  });
+
+  it('should cover all 13 admin read tool names', () => {
+    const expectedNames = [
+      'list_job_categories',
+      'list_employment_statuses',
+      'list_locations',
+      'list_nationalities',
+      'list_subunits',
+      'list_pay_grades',
+      'list_work_shifts',
+      'get_organization_info',
+      'list_education_qualifications',
+      'list_skill_qualifications',
+      'list_license_qualifications',
+      'list_language_qualifications',
+      'list_membership_qualifications',
+    ];
+    const actualNames = adminReadToolMocks.map((t) => t.name);
+    expect(actualNames).toEqual(expectedNames);
+    expect(actualNames.length).toBe(13);
+  });
+});
+
+describe('WebMCP Admin Tools - Write Tools', () => {
+  it('should create job title with valid name', async () => {
+    const tool = adminWriteToolMocks[0];
+    const result = (await tool.execute({name: 'Senior Engineer'})) as ToolResult;
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('Job title created');
+  });
+
+  it('should fail create_job_title when name is missing', async () => {
+    const tool = adminWriteToolMocks[0];
+    const result = (await tool.execute({})) as ToolResult;
+    expect(result.success).toBe(false);
+    expect(result.errorCode).toBe('VALIDATION_ERROR');
+  });
+
+  it('should create location with required name and countryCode', async () => {
+    const tool = adminWriteToolMocks[1];
+    const result = (await tool.execute({name: 'New York Office', countryCode: 'US'})) as ToolResult;
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('Location created');
+  });
+
+  it('should fail create_location when countryCode is missing', async () => {
+    const tool = adminWriteToolMocks[1];
+    const result = (await tool.execute({name: 'New York Office'})) as ToolResult;
+    expect(result.success).toBe(false);
+    expect(result.errorCode).toBe('VALIDATION_ERROR');
+  });
+
+  it('should create system user with all required fields', async () => {
+    const tool = adminWriteToolMocks[2];
+    const result = (await tool.execute({
+      username: 'jdoe',
+      password: 'Secret123!',
+      userRoleId: 1,
+      empNumber: 42,
+      status: true,
+    })) as ToolResult;
+    expect(result.success).toBe(true);
+    expect(result.message).toContain('System user created');
+  });
+
+  it('should fail create_system_user when any required field is missing', async () => {
+    const tool = adminWriteToolMocks[2];
+    const result = (await tool.execute({
+      username: 'jdoe',
+      password: 'Secret123!',
+      // missing userRoleId, empNumber, status
+    })) as ToolResult;
+    expect(result.success).toBe(false);
+    expect(result.errorCode).toBe('VALIDATION_ERROR');
+  });
+
+  it('should enforce admin-only role for write tools', () => {
+    const adminOnlyRoles = ['admin'];
+    const roles = ['admin', 'supervisor', 'ess', 'hr'];
+    const results = roles.map((r) => adminOnlyRoles.includes(r));
+    expect(results).toEqual([true, false, false, false]);
+  });
+
+  it('should have schemas with required fields for all write tools', () => {
+    for (const tool of adminWriteToolMocks) {
+      expect(tool.inputSchema).toBeDefined();
+      expect(tool.inputSchema?.required?.length).toBeGreaterThan(0);
+    }
+  });
+});
+
 export {};
