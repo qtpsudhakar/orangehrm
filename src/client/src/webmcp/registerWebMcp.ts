@@ -4,6 +4,8 @@ import {
   getRegisteredToolNames,
   registerTools,
 } from './core/toolRegistry';
+import {getAdminReadTools} from './tools/adminReadTools';
+import {getAdminWriteTools} from './tools/adminWriteTools';
 import {getReadTools} from './tools/readTools';
 import {getWriteTools} from './tools/writeTools';
 import {clearToolAuditLogs, getToolAuditLogs} from './core/auditLogger';
@@ -35,7 +37,12 @@ export const registerWebMcpTools = (): number => {
     return 0;
   }
 
-  const tools = [...getReadTools(), ...getWriteTools()];
+  const tools = [
+    ...getReadTools(),
+    ...getWriteTools(),
+    ...getAdminReadTools(),
+    ...getAdminWriteTools(),
+  ];
   const registeredCount = registerTools(tools);
   attachWebMcpDebugApi();
   return registeredCount;
