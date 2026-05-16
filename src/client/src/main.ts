@@ -27,6 +27,15 @@ import '@ohrm/oxd/style.css';
 import './core/styles/global.scss';
 import './core/plugins/toaster/toaster.scss';
 import './core/plugins/loader/loader.scss';
+import {registerWebMcpTools} from './webmcp/registerWebMcp';
+
+type WebMcpToolResultDetail = {
+  toolName: string;
+  success: boolean;
+  message: string;
+  errorCode?: string;
+  navigatedTo?: string;
+};
 
 const app = createApp({
   name: 'App',
@@ -43,7 +52,40 @@ app.use(toaster, {
   position: 'bottom',
 });
 
-// @ts-expect-error: appGlobal is not in window object by default
+window.addEventListener('webmcp:tool-result', (event: Event) => {
+  const customEvent = event as CustomEvent<WebMcpToolResultDetail>;
+  const detail = customEvent.detail;
+  if (!detail) {
+    return;
+  }
+
+  const toast = app.config.globalProperties.$toast as ToasterAPI | undefined;
+  if (!toast) {
+    return;
+  }
+
+  const message = detail.navigatedTo
+    ? `${detail.message} (navigating...)`
+    : detail.message;
+
+  if (detail.success) {
+    void toast.success({
+      title: `WebMCP: ${detail.toolName}`,
+      message,
+    });
+    return;
+  }
+
+  const errorMessage = detail.errorCode
+    ? `${message} [${detail.errorCode}]`
+    : message;
+
+  void toast.error({
+    title: `WebMCP: ${detail.toolName}`,
+    message: errorMessage,
+  });
+});
+
 const baseUrl = window.appGlobal.baseUrl;
 
 const {i18n, init} = createI18n({
@@ -67,4 +109,7 @@ app.config.globalProperties.global = {
   baseUrl,
 };
 
-init().then(() => app.mount('#app'));
+init().then(() => {
+  registerWebMcpTools();
+  app.mount('#app');
+});

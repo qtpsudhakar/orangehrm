@@ -17,15 +17,24 @@
 
 /* eslint-disable */
 declare module '*.vue' {
-  import type { DefineComponent } from 'vue'
-  const component: DefineComponent<{}, {}, any>
-  export default component
+  import type {DefineComponent} from 'vue';
+  const component: DefineComponent<{}, {}, any>;
+  export default component;
 }
 
-declare global {
-  interface Window {
-    appGlobal: {
-      baseUrl: string;
-    };
-  }
+interface Window {
+  appGlobal: {
+    baseUrl: string;
+    webmcpRole?: string;
+    userRole?: string;
+  };
+  webmcp?: {
+    tools: () => string[];
+    executeTool: (
+      toolName: string,
+      args?: Record<string, unknown>,
+    ) => Promise<unknown>;
+    auditLogs: () => unknown[];
+    clearAuditLogs: () => void;
+  };
 }

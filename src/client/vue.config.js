@@ -20,6 +20,7 @@ module.exports = {
     plugins: [new DumpBuildTimestampPlugin()],
   },
   chainWebpack: (config) => {
+    config.plugins.delete('eslint');
     config.plugins.delete('html');
     config.plugins.delete('preload');
     config.plugins.delete('prefetch');
