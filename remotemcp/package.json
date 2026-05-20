@@ -1,0 +1,35 @@
+{
+  "name": "orangehrm-remote-mcp",
+  "version": "1.0.0",
+  "description": "OrangeHRM RemoteMCP server — exposes OrangeHRM APIs as MCP tools for Claude Desktop and remote clients",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "orangehrm-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:http": "node dist/httpServer.js",
+    "dev": "tsx src/index.ts",
+    "dev:http": "tsx src/httpServer.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.11.0",
+    "axios": "^1.7.9",
+    "axios-cookiejar-support": "^4.0.7",
+    "dotenv": "^17.4.2",
+    "tough-cookie": "^4.1.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/tough-cookie": "^4.0.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
